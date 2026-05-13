@@ -2241,6 +2241,18 @@ enum TimeUnit {
 FIXME: details needed here on time in Rust.
 :::
 
+* `ctx.get_tag(&self) -> EventTag` Returns the tag at which the reaction executes.
+
+* `ctx.get_start_time(&self) -> Instant` Returns the start time of the execution of this program.
+
+* `ctx.get_physical_time(&self) -> Instant` Returns the current Physical time.
+
+* `ctx.get_logical_time(&self) -> Instant` Returns the current Logical time.
+
+* `ctx.get_elapsed_logical_time(&self) -> Duration` Returns the elapsed Logical time is frozen during the execution of a reactor.
+
+* `ctx.get_elapsed_physical_time(&self) -> Duration` Returns the amount of physical time elapsed since the start of the program.
+
 </ShowIf>
 </ShowIfs>
 [comment]: <> (================= NEW SECTION =====================)
@@ -2625,13 +2637,13 @@ logical action act: u32;
 Within a reaction, you can schedule that action with a value like so
 
 ```rust
-ctx.schedule_with_v(act, Asap, 30);
+ctx.schedule_with_v(act, Some(30), Asap);
 ```
 
 you can get the value from another reaction like so:
 
 ```rust
-if let Some(value) = ctx.get_action(act) {
+if let Some(value) = ctx.get(act) {
   // a value is present at this tag
 } else {
   // value was not specified
@@ -2798,9 +2810,14 @@ A reaction may request that the execution stop by calling the function `util.req
 </ShowIf>
 <ShowIf rs>
 
-:::warning
-FIXME: Details needed here.
-:::
+`ctx.request_stop(&self, offset: Offset)`
+```lf-rs 
+reactor shutdown { 
+  reaction(startup) {=
+    ctx.request_stop(Asap);
+  =}
+}
+```
 
 </ShowIf>
 </ShowIfs>
@@ -3649,8 +3666,8 @@ reactor Source {
 
 In this example, the context object `ctx` is used to set a port to a value. The port is in scope as `out`.
 
-> :warning: TODO when the runtime crate is public link to the docs, they should be the most exhaustive documentation.
+For more information please look towards the reactor_rt crate, [runtime crate](https://lf-lang.github.io/reactor-rs/reactor_rt/index.html).
+
 
 </ShowIf>
 </ShowIfs>
-````

@@ -157,9 +157,27 @@ See the [TypeScript reactor documentation](../reference/target-language-details.
 
 <ShowIf rs>
 
-:::danger
-FIXME: Rust
-:::
+
+In Rust, a parameter or state variable may be assigned a vector expression as its initial value, as in the following example:
+```lf-rs
+reactor Foo(param: Vec<f64> =  {= vec![1.0, 2.0, 3.0] =}) {
+  state param = param
+  ...
+}
+```
+
+The `param` parameter and the `param` state variable become `Vec<f64>`.
+Their elements may be accessed as an array, for example `self.param[i]`, where `i` is an index.
+
+The parameter may be overridden with a different vector at instantiation:
+
+```lf-rs
+  main reactor { 
+    f = new foo (param = {= vec![0.1, 0.2, 0.3] =} ) 
+  }
+```
+
+See the [Rust reactor documentation](../reference/target-language-details.mdx) for more details.
 
 </ShowIf>
 </ShowIfs>
